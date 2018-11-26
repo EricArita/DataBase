@@ -7,7 +7,7 @@ create database QLLinhKienDT
 go
 use QLLinhKienDT
 go
-SET DATEFORMAT dmy;
+SET DATEFORMAT dmy
 go
 create table LoaiSP(
    MaLoai varchar(5) PRIMARY KEY,
@@ -21,6 +21,7 @@ create table NguonCungCap(
    GhiChu Nvarchar(50),
 );
 go
+
 create table SanPham
 (
   MaSP varchar(5) PRIMARY KEY,
@@ -32,14 +33,14 @@ create table SanPham
   DonViTinh Nvarchar(10),
 );
 
-
 go
 create table Kho(
   IDKho int IDENTITY(1,1)Primary Key,
   MaSP varchar(5) FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP) ON DELETE CASCADE,
   TenSP nvarchar(50),
-  MaNguon varchar(5) foreign key (MaNguon) references NguonCungCap(MaNguon),
-  ThoiGian varchar(20) ,
+  MaNguon varchar(5) foreign key (MaNguon) REFERENCES NguonCungCap(MaNguon),
+  TenNguon nvarchar(50),
+  ThoiGian datetime,
   TrangThai nvarchar(5),
   SoLuong int,
   GhiChu nvarchar(50),
@@ -53,10 +54,11 @@ Create table KhachHang(
   GhiChu Nvarchar(50),
 );
 go
+
 create table TaiKhoan(
   MaTaiKhoan varchar(5) Primary key,
-  TenTK Nvarchar(50),
-  MatKhau varchar(10),
+  Username Nvarchar(50),
+  Password varchar(10),
   HoTen Nvarchar(50),
   SoDT varchar(11),
   SoCmnd varchar(10),
@@ -64,15 +66,18 @@ create table TaiKhoan(
   GhiChu Nvarchar(50),
   urlHinhAnh Nchar(150),
 );
+
 go
+
 create table PhanQuyen(
-  Id int IDENTITY(1,1),
-  MaPhanQuyen varchar(5) Primary key,
-  FormName varchar(50),
+  ID int IDENTITY(1,1) Primary key,
   MaTaiKhoan varchar(5),FOREIGN KEY (MaTaiKhoan) REFERENCES TaiKhoan(MaTaiKhoan) ON DELETE CASCADE,
+  MaPhanQuyen varchar(5) ,
   GhiChu Nvarchar(50),
 );
+
 go
+
 create table HoaDon(
   MaHD varchar(5) primary key ,
   NgayLap datetime,
@@ -92,18 +97,24 @@ create table ChiTietHD(
   SPTang bit
 );
 go
-create table DMform(
- IDform varchar(4) primary key,
- TenBtn varchar(20),
- TenForm Nvarchar(100),
+
+create table NhomQuyen(
+ ID int identity(1,1),
+ MaNhomQuyen varchar(5) primary key,
+ Mota nvarchar(100)	
 );
+
 go
-create table Quyen(
- ID int IDENTITY(1,1),
- MaTaiKhoan varchar(5) foreign key (MaTaiKhoan) references TaiKhoan(MaTaiKhoan) ON DELETE CASCADE,
- IDform varchar(4) foreign key (IDform) references DMform(IDform) ON DELETE CASCADE,
+
+create table ChiTietPhanQuyen(
+ ID int identity(1,1) primary key,
+ MaPhanQuyen varchar(5) foreign key(MaPhanQuyen) references NhomQuyen(MaNhomQuyen),
+ BtnName varchar(30),
+ FormName Nvarchar(100),
 );
+
 go
+
 insert into LoaiSP values('SN01',N'Tai nghe Sony'); 
 insert into LoaiSP values('SS02',N'Tai nghe SamSung'); 
 insert into LoaiSP values('CL01',N'Kính cường lực'); 
@@ -160,27 +171,27 @@ insert into SanPham values('TSWF','WF','CTDD',N'Bộ thu sống wifi 206m','2000
 insert into SanPham values('DCOM1','DCOM','CNNK',N'D-Com 3g','200000','250000','cái');
 
 go
-insert into Kho values('TP001',N'Tai nghe Sony','KTHT','10/03/2017',N'Nhập',100,'');
-insert into Kho values('TP001',N'Tai nghe Sony','KTHT','13/03/2017',N'Xuất',80,'');
-insert into Kho values('TP001',N'Tai nghe Sony','KTHT','14/03/2017',N'Nhập',10,'');
-insert into Kho values('TP001',N'Tai nghe Sony','KTHT','14/03/2017',N'Xuất',5,'');
-insert into Kho values('TP002',N'Tai nghe SamSung','CNNK','11/03/2017',N'Nhập',150,'');
-insert into Kho values('TP002',N'Tai nghe SamSung','CNNK','11/03/2017',N'Xuất',100,'');
-insert into Kho values('TP002',N'Tai nghe SamSung','CNNK','12/03/2017',N'Xuất',2,'');
-insert into Kho values('TP002',N'Tai nghe SamSung','CNNK','13/03/2017',N'Xuất',3,'');
-insert into Kho values('TP002',N'Tai nghe SamSung','CNNK','13/03/2017',N'Xuất',10,'');
-insert into Kho values('KCL01',N'Kính cường lực','TTAN','11/03/2017',N'Nhập',80,'');
-insert into Kho values('KCL01',N'Kính cường lực','TTAN','11/03/2017',N'Xuất',50,'');
-insert into Kho values('SDP01',N'Sạc dự phòng','CTDD','12/03/2017',N'Nhập',120,'');
-insert into Kho values('SDP01',N'Sạc dự phòng','CTDD','12/03/2017',N'Xuất',50,'');
-insert into Kho values('BP001',N'Bàn phím máy tính','CTDD','12/3/2017',N'Nhập',70,'');
-insert into Kho values('BP001',N'Bàn phím máy tính','CTDD','12/3/2017',N'Xuất',20,'');
-insert into Kho values('PDT01',N'Bàn phím điện thoại SamSung','CTDD','11/3/2017',N'Nhập',90,'');
-insert into Kho values('PDT01',N'Bàn phím điện thoại SamSung','CTDD','11/3/2017',N'Xuất',10,'');
-insert into Kho values('PDT02',N'Bàn phím điện thoại Apple','CTDD','11/8/2017',N'Nhập',120,'');
-insert into Kho values('PDT02',N'Bàn phím điện thoại Apple','CTDD','11/8/2017',N'Nhập',50,'');
-insert into Kho values('PDT03',N'Bàn phím điện thoại Asus','CTDD','11/9/2017',N'Nhập',80,'');
-insert into Kho values('PDT03',N'Bàn phím điện thoại Asus','CTDD','11/9/2017',N'Nhập',20,'');
+insert into Kho values('TP001',N'Tai nghe Sony','KTHT',N'Công ty TNHH Kỹ thuật Hưng Thịnh','10/03/2017',N'Nhập',100,'');
+insert into Kho values('TP001',N'Tai nghe Sony','KTHT',N'Công ty TNHH Kỹ thuật Hưng Thịnh','13/03/2017',N'Xuất',80,'');
+insert into Kho values('TP001',N'Tai nghe Sony','KTHT',N'Công ty TNHH Kỹ thuật Hưng Thịnh','14/03/2017',N'Nhập',10,'');
+insert into Kho values('TP001',N'Tai nghe Sony','KTHT',N'Công ty TNHH Kỹ thuật Hưng Thịnh','14/03/2017',N'Xuất',5,'');
+insert into Kho values('TP002',N'Tai nghe SamSung','CNNK',N'Công ty TNHH Công nghệ và Xây Dựng Nam Kinh','11/03/2017',N'Nhập',150,'');
+insert into Kho values('TP002',N'Tai nghe SamSung','CNNK',N'Công ty TNHH Công nghệ và Xây Dựng Nam Kinh','11/03/2017',N'Xuất',100,'');
+insert into Kho values('TP002',N'Tai nghe SamSung','CNNK',N'Công ty TNHH Công nghệ và Xây Dựng Nam Kinh','12/03/2017',N'Xuất',2,'');
+insert into Kho values('TP002',N'Tai nghe SamSung','CNNK',N'Công ty TNHH Công nghệ và Xây Dựng Nam Kinh','13/03/2017',N'Xuất',3,'');
+insert into Kho values('TP002',N'Tai nghe SamSung','CNNK',N'Công ty TNHH Công nghệ và Xây Dựng Nam Kinh','13/03/2017',N'Xuất',10,'');
+insert into Kho values('KCL01',N'Kính cường lực','TTAN',N'Công ty TNHH Thương mại dịch vụ An Nhất','11/03/2017',N'Nhập',80,'');
+insert into Kho values('KCL01',N'Kính cường lực','TTAN',N'Công ty TNHH Thương mại dịch vụ An Nhất','11/03/2017',N'Xuất',50,'');
+insert into Kho values('SDP01',N'Sạc dự phòng','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','12/03/2017',N'Nhập',120,'');
+insert into Kho values('SDP01',N'Sạc dự phòng','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','12/03/2017',N'Xuất',50,'');
+insert into Kho values('BP001',N'Bàn phím máy tính','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','12/3/2017',N'Nhập',70,'');
+insert into Kho values('BP001',N'Bàn phím máy tính','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','12/3/2017',N'Xuất',20,'');
+insert into Kho values('PDT01',N'Bàn phím điện thoại SamSung','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','11/3/2017',N'Nhập',90,'');
+insert into Kho values('PDT01',N'Bàn phím điện thoại SamSung','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','11/3/2017',N'Xuất',10,'');
+insert into Kho values('PDT02',N'Bàn phím điện thoại Apple','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','11/8/2017',N'Nhập',120,'');
+insert into Kho values('PDT02',N'Bàn phím điện thoại Apple','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','11/8/2017',N'Nhập',50,'');
+insert into Kho values('PDT03',N'Bàn phím điện thoại Asus','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','11/9/2017',N'Nhập',80,'');
+insert into Kho values('PDT03',N'Bàn phím điện thoại Asus','CTDD',N'Công ty TNHH Thương mại dịch vụ Đồng Dung','11/9/2017',N'Nhập',20,'');
 go
 
 insert into KhachHang values('KH001',N'Mai Thị Tuyết Nhi','0169748259',N'Q9-TPHCM');
@@ -196,17 +207,16 @@ insert into KhachHang values('KH010',N'Phạm Minh Tiến','0168532889',N'Đăk 
 
 go
 
-insert into TaiKhoan values ('TK002','mainhi','1111',N'Mai Thị Tuyết Nhi','01640295695','632145',N'Quận 9','','..\..\..\resource\image\nhanvien\nv5.PNG');
-insert into TaiKhoan values ('TK001','lananh','2011',N'Hoàng Thị Lan Anh','01203301033','669645',N'Quận 9','','..\..\..\resource\image\nhanvien\nv6.PNG');
-insert into TaiKhoan values ('TK003','canhvi','2222',N'Huỳnh Thị Cảnh Vi','01640295785','122145',N'Quận 1','','..\..\..\resource\image\nhanvien\nv3.PNG');
-insert into TaiKhoan values ('TK004','vancuong','VC01234',N'Huỳnh Văn Cường','0164029789','7832145',N'Đà Nẵng','','..\..\..\resource\image\nhanvien\nv4.PNG');
-insert into TaiKhoan values ('TK005','longtuyen','LT4567',N'Bùi Long Tuyên','01640295678','616145',N'Cần Thơ','','..\..\..\resource\image\nhanvien\nv1.PNG');
-insert into TaiKhoan values ('TK006','xuanhoi','XH1345',N'Nguyễn Xuân Hội','01641695695','587145',N'Quận 1','','..\..\..\resource\image\nhanvien\nv2.PNG');
-insert into TaiKhoan values ('TK007','vantuyen','VT3457',N'Nguyễn Văn Tuyên','01675195695','632157',N'Đồng Nai','','..\..\..\resource\image\nhanvien\nv3.PNG');
-insert into TaiKhoan values ('TK008','quangtuan','QT1234',N'Trương Quang Tuấn','01640123495','754345',N'Bình Dương','','..\..\..\resource\image\nhanvien\nv4.PNG');
-insert into TaiKhoan values ('TK009','minhtien','MT1234',N'Phạm Minh Tiến','01640295612','632715',N'Lâm Đồng','','..\..\..\resource\image\nhanvien\nv1.PNG');
-insert into TaiKhoan values ('TK010','quangtan','QT234',N'Trương Quang Tấn','01643595695','354145',N'Hà Nội','','..\..\..\resource\image\nhanvien\nv2.PNG');
-
+insert into TaiKhoan values ('TK001','lananh','2011',N'Hoàng Thị Lan Anh','01203301033','669645',N'Quận 9','Admin','..\..\..\resource\image\nhanvien\nv6.PNG');
+insert into TaiKhoan values ('TK002','mainhi','1111',N'Mai Thị Tuyết Nhi','01640295695','632145',N'Quận 9', N'Nhân viên bán hàng','..\..\..\resource\image\nhanvien\nv5.PNG');
+insert into TaiKhoan values ('TK003','canhvi','2222',N'Huỳnh Thị Cảnh Vi','01640295785','122145',N'Quận 1', N'Nhân viên quản lí','..\..\..\resource\image\nhanvien\nv3.PNG');
+insert into TaiKhoan values ('TK004','vancuong','VC01234',N'Huỳnh Văn Cường','0164029789','7832145',N'Đà Nẵng',N'Nhân viên bán hàng','..\..\..\resource\image\nhanvien\nv4.PNG');
+insert into TaiKhoan values ('TK005','longtuyen','LT4567',N'Bùi Long Tuyên','01640295678','616145',N'Cần Thơ',N'Nhân viên bán hàng','..\..\..\resource\image\nhanvien\nv1.PNG');
+insert into TaiKhoan values ('TK006','xuanhoi','XH1345',N'Nguyễn Xuân Hội','01641695695','587145',N'Quận 1','Admin','..\..\..\resource\image\nhanvien\nv2.PNG');
+insert into TaiKhoan values ('TK007','vantuyen','VT3457',N'Nguyễn Văn Tuyên','01675195695','632157',N'Đồng Nai',N'Nhân viên quản lí','..\..\..\resource\image\nhanvien\nv3.PNG');
+insert into TaiKhoan values ('TK008','quangtuan','QT1234',N'Trương Quang Tuấn','01640123495','754345',N'Bình Dương',N'Nhân viên bán hàng','..\..\..\resource\image\nhanvien\nv4.PNG');
+insert into TaiKhoan values ('TK009','minhtien','MT1234',N'Phạm Minh Tiến','01640295612','632715',N'Lâm Đồng',N'Nhân viên bán hàng','..\..\..\resource\image\nhanvien\nv1.PNG');
+insert into TaiKhoan values ('TK010','quangtan','QT234',N'Trương Quang Tấn','01643595695','354145',N'Hà Nội',N'Nhân viên bán hàng','..\..\..\resource\image\nhanvien\nv2.PNG');
  go
 
  insert into HoaDon values('HD1','3/3/2017','TK001',1,N'','','','');
@@ -263,63 +273,82 @@ insert into ChiTietHD values('HD19','SDT01',5,0);
 insert into ChiTietHD values('HD20','SDT02',2,0);
 
 go
-insert into DMform values('Q001','btnSanPham',N'Danh mục sản phẩm');
-insert into DMform values('Q002','btnLoaiSanPham',N'Danh mục loại sản phẩm');
-insert into DMform values('Q003','btnKhachHang',N'Danh mục khách hàng');
-insert into DMform values('Q004','btnNhaCungCap',N'Danh mục nhà cung cấp');
-insert into DMform values('Q005','btnNhapHang',N'Nhập hàng');
-insert into DMform values('Q006','btnBanHang',N'Bán hàng');
-insert into DMform values('Q007','btnThongKe',N'Thống kê');
-insert into DMform values('Q008','btnBaoCaoDT',N'Báo cáo doanh thu');
-insert into DMform values('Q009','btnBaoCaoSPnhap',N'Báo cáo sản phẩm nhập');
-insert into DMform values('Q010','btnBaoCaoSPBan',N'Báo cáo sản phẩm bán');
-insert into DMform values('Q011','btnBaoCaoNV',N'Báo cáo nhân viên');
-insert into DMform values('Q012','btnTaiKhoan',N'Quản lý tài khoản');
-insert into DMform values('Q013','btnDoiMK',N'Đổi mật khẩu');
-insert into DMform values('Q014','btnDangXuat',N'Đăng xuất');
-insert into DMform values('Q015','btnPhanQuyen',N'Phân quyền');
-insert into DMform values('Q016','btnSaoLuuDL',N'Sao lưu dữ liệu');
-insert into DMform values('Q017','btnPhucHoiDL',N'Phục hồi dữ liệu');
-insert into DMform values('Q018','btnGioiThieu',N'Giới thiệu');
-insert into DMform values('Q019','btnDoiGiaoDien',N'Đổi giao diện');
-go
-insert into Quyen values('TK001','Q001');
-insert into Quyen values('TK001','Q002');
-insert into Quyen values('TK001','Q003');
-insert into Quyen values('TK001','Q004');
-insert into Quyen values('TK001','Q005');
-insert into Quyen values('TK001','Q006');
-insert into Quyen values('TK001','Q007');
-insert into Quyen values('TK001','Q008');
-insert into Quyen values('TK001','Q009');
-insert into Quyen values('TK001','Q010');
-insert into Quyen values('TK001','Q011');
-insert into Quyen values('TK001','Q012');
-insert into Quyen values('TK001','Q013');
-insert into Quyen values('TK001','Q014');
-insert into Quyen values('TK001','Q015');
-insert into Quyen values('TK001','Q016');
-insert into Quyen values('TK001','Q017');
-insert into Quyen values('TK001','Q018');
-insert into Quyen values('TK001','Q019');
-insert into Quyen values('TK002','Q019');
-insert into Quyen values('TK002','Q013');
-insert into Quyen values('TK002','Q014');
-go
-create view view_TongSPNhap
-as
-	select MaSP,TrangThai,sum(SoLuong) as SoLuong
-	from Kho
-	where TrangThai = N'Nhập'
-	group by MaSP,TrangThai
+
+insert into NhomQuyen values('Q001', N'Nhóm quyền cao nhất dành cho admin');
+insert into NhomQuyen values('Q002', N'Nhóm quyền dành cho cấp quản lí');
+insert into NhomQuyen values('Q003', N'Nhóm quyền dành cho nhân viên bán hàng');
 
 go
-create view view_TongSPXuat
-as
-	select MaSP,TrangThai,sum(SoLuong) as SoLuong
+insert into ChiTietPhanQuyen values('Q001','barbtnProduct',N'Danh mục sản phẩm');
+insert into ChiTietPhanQuyen values('Q002','barbtnProduct',N'Danh mục sản phẩm');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnProductType',N'Danh mục loại sản phẩm');
+insert into ChiTietPhanQuyen values('Q002','barbtnProductType',N'Danh mục loại sản phẩm');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnCustomer',N'Danh mục khách hàng');
+insert into ChiTietPhanQuyen values('Q002','barbtnCustomer',N'Danh mục khách hàng');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnProviders',N'Danh mục nhà cung cấp');
+insert into ChiTietPhanQuyen values('Q002','barbtnProviders',N'Danh mục nhà cung cấp');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnImport',N'Nhập hàng');
+insert into ChiTietPhanQuyen values('Q003','barbtnImport',N'Nhập hàng');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnSale',N'Bán hàng');
+insert into ChiTietPhanQuyen values('Q003','barbtnSale',N'Bán hàng');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnStatistics',N'Thống kê');
+insert into ChiTietPhanQuyen values('Q002','barbtnStatistics',N'Thống kê');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnFinacialReport',N'Báo cáo doanh thu');
+insert into ChiTietPhanQuyen values('Q002','barbtnFinacialReport',N'Báo cáo doanh thu');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnImportProductReport',N'Báo cáo sản phẩm nhập');
+insert into ChiTietPhanQuyen values('Q002','barbtnImportProductReport',N'Báo cáo sản phẩm nhập');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnExportProductReport',N'Báo cáo sản phẩm bán');
+insert into ChiTietPhanQuyen values('Q002','barbtnExportProductReport',N'Báo cáo sản phẩm bán');
+
+insert into ChiTietPhanQuyen values('Q001','barbtnStaffReport',N'Báo cáo nhân viên');
+insert into ChiTietPhanQuyen values('Q002','barbtnStaffReport',N'Báo cáo nhân viên');
+
+/*insert into ChiTietPhanQuyen values('Q001','barbtnAccount',N'Quản lý tài khoản');
+insert into ChiTietPhanQuyen values('Q013','btnDoiMK',N'Đổi mật khẩu');
+insert into ChiTietPhanQuyen values('Q014','btnDangXuat',N'Đăng xuất');
+insert into ChiTietPhanQuyen values('Q015','btnPhanQuyen',N'Phân quyền');
+insert into ChiTietPhanQuyen values('Q016','btnSaoLuuDL',N'Sao lưu dữ liệu');
+insert into ChiTietPhanQuyen values('Q017','btnPhucHoiDL',N'Phục hồi dữ liệu');
+insert into ChiTietPhanQuyen values('Q018','btnGioiThieu',N'Giới thiệu');
+insert into ChiTietPhanQuyen values('Q019','btnDoiGiaoDien',N'Đổi giao diện');*/
+
+go
+
+insert into PhanQuyen values('TK001', 'Q001', '');
+insert into PhanQuyen values('TK002', 'Q003', '');
+insert into PhanQuyen values('TK003', 'Q002', '');
+insert into PhanQuyen values('TK004', 'Q003', '');
+insert into PhanQuyen values('TK005', 'Q003', '');
+insert into PhanQuyen values('TK006', 'Q001', '');
+insert into PhanQuyen values('TK007', 'Q002', '');
+insert into PhanQuyen values('TK008', 'Q003', '');
+insert into PhanQuyen values('TK009', 'Q003', '');
+insert into PhanQuyen values('TK010', 'Q003', '');
+
+go
+CREATE VIEW view_TongSPNhap
+AS
+	select MaSP,MaNguon,TrangThai,sum(SoLuong) as SoLuong
+	from Kho
+	where TrangThai = N'Nhập'
+	group by MaSP,TrangThai,Manguon
+
+go
+CREATE VIEW view_TongSPXuat
+AS
+	select MaSP,MaNguon,TrangThai,sum(SoLuong) as SoLuong
 	from Kho
 	where TrangThai = N'Xuất'
-	group by MaSP,TrangThai
+	group by MaSP,TrangThai,MaNguon
 go
 CREATE PROC SortID
 AS
@@ -328,26 +357,68 @@ BEGIN
 		 MaSP varchar(5),
 		 TenSP nvarchar(50),
 		 MaNguon varchar(5),
+		 TenNguon nvarchar(50),
 		 ThoiGian varchar(20) ,
 		 TrangThai nvarchar(5),
 		 SoLuong int,
 		 GhiChu nvarchar(50)
 	);
 
-	INSERT INTO @BangTam SELECT MaSP, TenSP, MaNguon, ThoiGian, TrangThai, SoLuong, GhiChu FROM Kho ORDER BY IDKho ASC;
+	INSERT INTO @BangTam(MaSP, TenSP, MaNguon, TenNguon, ThoiGian, TrangThai, SoLuong, GhiChu) SELECT MaSP, TenSP, MaNguon, TenNguon, ThoiGian, TrangThai, SoLuong, GhiChu FROM Kho ORDER BY IDKho ASC;
 	DROP TABLE Kho;
 	CREATE TABLE Kho(
 		 IDKho int IDENTITY(1,1)Primary Key,
 		 MaSP varchar(5) FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP) ON DELETE CASCADE,
 		 TenSP nvarchar(50),
 		 MaNguon varchar(5) foreign key (MaNguon) references NguonCungCap(MaNguon),
+		 TenNguon nvarchar(50),
 		 ThoiGian varchar(20) ,
 		 TrangThai nvarchar(5),
 		 SoLuong int,
 	     GhiChu nvarchar(50),
 	);
-	INSERT INTO Kho SELECT MaSP, TenSP, MaNguon, ThoiGian, TrangThai, SoLuong, GhiChu FROM @BangTam;
+	INSERT INTO Kho(MaSP, TenSP, MaNguon, TenNguon, ThoiGian, TrangThai, SoLuong, GhiChu) SELECT MaSP, TenSP, MaNguon, TenNguon, ThoiGian, TrangThai, SoLuong, GhiChu FROM @BangTam;
 END;
+GO
+CREATE PROC TaoBangHangTonKho
+AS
+BEGIN
+		DECLARE @BangTam1 TABLE(
+			 ID int IDENTITY(1,1)Primary Key,
+			 MaSP varchar(5)
+		);
+		INSERT INTO @BangTam1(MaSP) SELECT MaSP FROM view_TongSPNhap;
+
+		DECLARE @BangTam2 TABLE(
+				 ID int IDENTITY(1,1)Primary Key,
+				 MaSP varchar(5),
+				 TenSP nvarchar(50),
+				 TenNguon nvarchar(50),
+				 SoLuong int
+		);
+
+		DECLARE @currID INT = 1, @MaxID INT, @MaSP varchar(5), @SLNhap INT, @SLXuat INT;
+		SELECT @MaxID = MAX(ID) FROM @BangTam1;
+
+		WHILE @currID < @MaxID + 1
+		BEGIN
+			SET @SLNhap = 0;
+			SET @SLXuat = 0;
+			SELECT @MaSP = MaSP FROM @BangTam1 WHERE ID = @currID;
+			SELECT @SLNhap = view_TongSPNhap.SoLuong FROM view_TongSPNhap WHERE MaSP = @MaSP;
+			SELECT @SLXuat = view_TongSPXuat.SoLuong FROM view_TongSPXuat WHERE MaSP = @MaSP;
+			INSERT INTO @BangTam2(MaSP, TenSP, TenNguon, SoLuong)
+			SELECT DISTINCT @MaSP, Kho.TenSP, Kho.TenNguon, @SLNhap - @SLXuat
+			FROM Kho
+			WHERE Kho.MaSP = @MaSP;
+
+			SET @currID = @currID + 1;
+		END;
+
+		SELECT MaSP, TenSP, TenNguon, SoLuong FROM @BangTam2;
+END;
+GO
+
 
 
 --select nhap.MaSP, COALESCE(nhap.SoLuong - xuat.SoLuong,nhap.SoLuong) as SoLuong,sp.TenSP
@@ -376,7 +447,6 @@ END;
 --from TaiKhoan tk,HoaDon hd, ChiTietHD ct,SanPham sp
 --where tk.MaTaiKhoan= hd.MaTaiKhoan and hd.MaHD = ct.MaHD and ct.MaSP = sp.MaSP 
 
-
 --select k.MaSP, sp.TenSP, n.TenNguon , sum(k.SoLuong) as SL
 --from Kho k, SanPham sp, NguonCungCap n
 --where k.MaSP = sp.MaSP and sp.MaNguon = n.MaNguon and k.TrangThai = N'Xuất'
@@ -384,7 +454,7 @@ END;
 --ORDER BY SL DESC
 
 --select Q.*,F.TenBtn, F.TenForm
---from Quyen Q, DMform F
+--from Quyen Q, ChiTietPhanQuyen F
 --where Q.IDform=F.IDform 
 
 --select hd.* , tk.HoTen
